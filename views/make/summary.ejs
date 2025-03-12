@@ -15,31 +15,93 @@
 
     <form action="/exams/<%=exam._id%>?_method=PUT" method="post">
       <label for="createdBy">만든이</label>
-      <input type="text" name="title" id="title" value="<%=exam.title%>" />
+      <input
+        type="text"
+        name="title"
+        id="title"
+        value="<%=exam.title%>"
+        required
+      />
       <input
         type="text"
         name="createdBy"
         id="createdBy"
         value="<%=exam.createdBy%>"
+        required
       />
       <button>수정하기</button>
     </form>
 
+    <p>문제 추가하기</p>
+    <form action="/exams/<%=exam._id%>/q/make" method="post">
+      <label for="question">문제</label>
+      <input type="text" name="question" id="question" required />
+      <ul>
+        <% for (let i = 0; i < 5; i++) { %>
+        <li>
+          <input type="radio" name="answer" value="<%=i%>"
+          id="choice-radio-<%=i%>" <%= i === 0 ? 'checked' : '' %> />
+          <input
+            type="text"
+            name="options[]"
+            id="choice-text-<%=i%>"
+            placeholder="<%=i + 1 %>번 보기"
+            required
+          />
+        </li>
+        <% } %>
+      </ul>
+      <label for="explanation">해설</label>
+      <textarea name="explanation" id="explanation"></textarea>
+      <button>추가하기</button>
+    </form>
+
     <p>현재 질문 목록</p>
     <% for (const [q_index, question] of exam.questions.entries()) { %>
-    <h2><%=q_index + 1%>. <%=question.question%></h2>
 
-    <a href="/questions/<%=question._id%>/modify">질문 수정하기</a>
+    <form
+      action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=DELETE"
+      method="post"
+    >
+      <button>삭제하기</button>
+    </form>
 
-    <ul>
-      <% for (let [opt_index, option] of question.options.entries()) {%>
-      <li>
-        <%=option%><% if (question.answer === String(opt_index)) {%> ✅ <% } %>
-      </li>
+    <form
+      action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=PUT"
+      method="post"
+    >
+      <h2><%=q_index + 1%>. <%=question.question%></h2>
 
-      <% } %>
-    </ul>
-    <p><%=question.explanation%></p>
+      <label for="question">문제</label>
+      <input
+        type="text"
+        name="question"
+        id="question_<%=question._id%>"
+        value="<%=question.question%>"
+        required
+      />
+      <ul>
+        <% for (let i = 1; i <= 5; i++) {%>
+        <li>
+          <input type="radio" name="answer"
+          id="choice-radio-<%=i%>_<%=question._id%>" value="<%=i - 1%>" <%=
+          String(i - 1) === question.answer ? "checked" :""%>>
+          <input
+            type="text"
+            name="options[]"
+            id="choice-text-<%=i%>_<%=question._id%>"
+            value="<%=question.options[i - 1]%>"
+            required
+          />
+        </li>
+        <% } %>
+      </ul>
+      <label for="explanation_<%=question._id%>">해설</label>
+      <textarea name="explanation" id="explanation_<%=question._id%>" rows="10">
+<%=question.explanation%></textarea
+      >
+      <button>추가하기</button>
+    </form>
     <% } %>
   </body>
 </html>

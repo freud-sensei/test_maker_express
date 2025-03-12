@@ -8,8 +8,14 @@
   <body>
     <h1>모의고사 선택</h1>
     <form action="/exams/make" method="post">
-      <input type="text" name="title" id="title" placeholder="제목" />
-      <input type="text" name="createdBy" id="createdBy" placeholder="만든이" />
+      <input type="text" name="title" id="title" placeholder="제목" required />
+      <input
+        type="text"
+        name="createdBy"
+        id="createdBy"
+        placeholder="만든이"
+        required
+      />
       <button>새로 만들기</button>
     </form>
     <table>

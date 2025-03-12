@@ -58,7 +58,7 @@ app.get("/exams/:id", async (req, res) => {
 });
 
 // UPDATE -> 문제 변경하기 form 제시
-app.get("/questions/:id/modify", async (req, res) => {});
+app.get("/exams/:id/q/modify", async (req, res) => {});
 
 // CREATE -> 모의고사 만들기
 app.post("/exams/make", async (req, res) => {
@@ -68,7 +68,15 @@ app.post("/exams/make", async (req, res) => {
 });
 
 // CREATE -> 문제 만들기
-app.post("/exams/question", async (req, res) => {});
+app.post("/exams/:id/q/make", async (req, res) => {
+  const { id } = req.params;
+  const newQuestion = new Question(req.body);
+  await newQuestion.save();
+  const exam = await Exam.findById(id);
+  exam.questions.push(newQuestion._id);
+  await exam.save();
+  res.redirect(`/exams/${id}/modify`);
+});
 
 // READ -> 모의고사 채점 후 결과 보여주기
 app.post("/exams/:id", async (req, res) => {
@@ -89,6 +97,13 @@ app.post("/exams/:id", async (req, res) => {
   res.render("exams/result", { exam, report, points });
 });
 
+// UPDATE -> 문제 변경하기
+app.put("/exams/:id/q/:q_id", async (req, res) => {
+  const { id, q_id } = req.params;
+  await Question.findByIdAndUpdate(q_id, req.body);
+  res.redirect(`/exams/${id}/modify`);
+});
+
 // UPDATE -> 모의고사 변경하기
 app.put("/exams/:id/", async (req, res) => {
   const { id } = req.params;
@@ -96,13 +111,18 @@ app.put("/exams/:id/", async (req, res) => {
   res.redirect("/exams");
 });
 
-// UPDATE -> 문제 변경하기
-
 // DELETE -> 모의고사 삭제하기
 app.delete("/exams/:id", async (req, res) => {
   const { id } = req.params;
   await Exam.findByIdAndDelete(id);
   res.redirect("/exams");
+});
+
+// DELETE -> 문제 삭제하기
+app.delete("/exams/:id/q/:q_id", async (req, res) => {
+  const { id, q_id } = req.params;
+  await Question.findByIdAndDelete(q_id);
+  res.redirect(`/exams/${id}/modify`);
 });
 
 app.listen(3000, () => {
