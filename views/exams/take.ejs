@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>모의고사 풀기</title>
+  </head>
+  <body>
+    <h1><%=exam.title%> 풀기</h1>
+    <form id="examForm" method="POST" action="/exams/<%=exam._id%>">
+      <% for (const [q_index, question] of exam.questions.entries()) { %>
+      <h2><%=q_index + 1%>. <%=question.question%></h2>
+
+      <% for (let [opt_index, option] of question.options.entries()) {%>
+      <label
+        ><input
+          type="radio"
+          ,
+          name="<%=question._id%>"
+          ,
+          value="<%=opt_index%>"
+        /><%=option%></label
+      >
+
+      <% } %> <% } %>
+      <button>제출하기</button>
+      <a href="/exams">돌아가기</a>
+    </form>
+  </body>
+</html>

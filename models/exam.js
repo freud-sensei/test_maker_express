@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema({
   question: { type: String, required: true }, // 문제
   options: { type: [String], required: true }, // 선지
-  answer: { type: Number, required: true }, // 정답 선지 번호
+  answer: { type: String, required: true }, // 정답 선지 번호
   explanation: { type: String }, // 해설
   exam: { type: mongoose.Schema.Types.ObjectID, ref: "Exam" },
   order: { type: Number }, // Seeding 시 문제 정렬을 위한 번호

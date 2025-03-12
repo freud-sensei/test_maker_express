@@ -17,7 +17,11 @@ async function seedDB() {
   // Promise.all() 사용해 모두 처리되기 전엔 안 넘어가도록 함.
   const questions = await Promise.all(
     questionArray.map((q, order) => {
-      return new Question({ ...q, order }).save();
+      return new Question({
+        ...q,
+        order,
+        questionNo: `q_${(order % 3) + 1}`,
+      }).save();
     })
   );
 
@@ -28,28 +32,20 @@ async function seedDB() {
   // 자동 생성된 id의 배열
   const questionIds = questions.map((q) => q._id);
 
-  const ExamArray = [
-    {
-      title: "송상록 고사 1",
+  const examArray = [];
+
+  for (let i = 1; i <= 3; i++) {
+    examArray.push({
+      title: `송상록 고사 ${i}`,
       createdBy: "송상록",
-      questions: questionIds.slice(0, 3),
-    },
-    {
-      title: "송상록 고사 2",
-      createdBy: "송상록",
-      questions: questionIds.slice(3, 6),
-    },
-    {
-      title: "송상록 고사 3",
-      createdBy: "송상록",
-      questions: questionIds.slice(6, 9),
-    },
-  ];
+      questions: questionIds.slice(3 * (i - 1), 3 * i),
+    });
+  }
 
   // 각 모의고사를 비동기로 데이터베이스에 저장하되,
   // Promise.all() 사용해 모두 처리되기 전엔 안 넘어가도록 함.
   await Promise.all(
-    ExamArray.map((m) => {
+    examArray.map((m) => {
       return new Exam(m).save();
     })
   );
