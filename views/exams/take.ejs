@@ -11,18 +11,23 @@
       <% for (const [q_index, question] of exam.questions.entries()) { %>
       <h2><%=q_index + 1%>. <%=question.question%></h2>
 
-      <% for (let [opt_index, option] of question.options.entries()) {%>
-      <label
-        ><input
-          type="radio"
-          ,
-          name="<%=question._id%>"
-          ,
-          value="<%=opt_index%>"
-        /><%=option%></label
-      >
+      <ul>
+        <% for (let [opt_index, option] of question.options.entries()) {%>
+        <li class="choices">
+          <label
+            ><input
+              type="radio"
+              ,
+              name="<%=question._id%>"
+              ,
+              value="<%=opt_index%>"
+            /><%=option%></label
+          >
+        </li>
 
-      <% } %> <% } %>
+        <% } %>
+      </ul>
+      <% } %>
       <button>제출하기</button>
       <a href="/exams">돌아가기</a>
     </form>

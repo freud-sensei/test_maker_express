@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>모의고사 만들기</title>
+  </head>
+  <body>
+    <h1><%=exam.title%></h1>
+    <a href="/exams">돌아가기</a>
+
+    <form action="/exams/<%=exam._id%>?_method=DELETE" method="post">
+      <button>삭제하기</button>
+    </form>
+
+    <form action="/exams/<%=exam._id%>?_method=PUT" method="post">
+      <label for="createdBy">만든이</label>
+      <input type="text" name="title" id="title" value="<%=exam.title%>" />
+      <input
+        type="text"
+        name="createdBy"
+        id="createdBy"
+        value="<%=exam.createdBy%>"
+      />
+      <button>수정하기</button>
+    </form>
+
+    <p>현재 질문 목록</p>
+    <% for (const [q_index, question] of exam.questions.entries()) { %>
+    <h2><%=q_index + 1%>. <%=question.question%></h2>
+
+    <a href="/questions/<%=question._id%>/modify">질문 수정하기</a>
+
+    <ul>
+      <% for (let [opt_index, option] of question.options.entries()) {%>
+      <li>
+        <%=option%><% if (question.answer === String(opt_index)) {%> ✅ <% } %>
+      </li>
+
+      <% } %>
+    </ul>
+    <p><%=question.explanation%></p>
+    <% } %>
+  </body>
+</html>

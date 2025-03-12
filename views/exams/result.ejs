@@ -5,5 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>채점 결과</title>
   </head>
-  <body></body>
+  <body>
+    <h1><%=exam.title%> 결과</h1>
+    <p><%=exam.questions.length%>문제 중 <%=points%>문제 맞히셨습니다.</p>
+    <% for (const [q_index, question] of exam.questions.entries()) { %>
+    <h2>
+      <%=q_index + 1%>. <%=question.question%> <%= question.answer ===
+      report[question._id] ? "⭕":"❌" %>
+    </h2>
+
+    <ul>
+      <% for (let [opt_index, option] of question.options.entries()) {%>
+      <li class="choices">
+        <label
+          ><input type="radio" , name="<%=question._id%>" ,
+          value="<%=opt_index%>" disabled <%= String(opt_index) ===
+          report[question._id] ? "checked" : ""%> /><%=option%></label
+        >
+        <% if (question.answer === String(opt_index)) {%> ✅ <% } %>
+      </li>
+
+      <% } %>
+    </ul>
+    <p><%=question.explanation%></p>
+    <% } %>
+
+    <a href="/exams">돌아가기</a>
+  </body>
 </html>
