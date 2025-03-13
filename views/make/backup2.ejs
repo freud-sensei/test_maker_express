@@ -1,0 +1,43 @@
+<form action="/exams/<%=exam._id%>?_method=PUT" method="post">
+  <label for="createdBy">만든이</label>
+  <input
+    type="text"
+    name="title"
+    id="title"
+    value="<%=exam.title%>"
+    required
+  />
+  <input
+    type="text"
+    name="createdBy"
+    id="createdBy"
+    value="<%=exam.createdBy%>"
+    required
+  />
+  <button>수정하기</button>
+</form>
+</div>
+<div class="card mb-3">
+<strong class="card-header">수동으로 추가하기</strong>
+<form action="/exams/<%=exam._id%>/q/make" method="post">
+  <label for="question">문제</label>
+  <input type="text" name="question" id="question" required />
+  <ul>
+    <% for (let i = 0; i < 5; i++) { %>
+    <li>
+      <input type="radio" name="answer" value="<%=i%>"
+      id="choice-radio-<%=i%>" <%= i === 0 ? 'checked' : '' %> />
+      <input
+        type="text"
+        name="options[]"
+        id="choice-text-<%=i%>"
+        placeholder="<%=i + 1 %>번 보기"
+        required
+      />
+    </li>
+    <% } %>
+  </ul>
+  <label for="explanation">해설</label>
+  <textarea name="explanation" id="explanation"></textarea>
+  <button>추가하기</button>
+</form>

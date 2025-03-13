@@ -106,14 +106,7 @@ app.put("/exams/:id/q/:q_id", async (req, res) => {
 app.put("/exams/:id/", async (req, res) => {
   const { id } = req.params;
   await Exam.findByIdAndUpdate(id, req.body);
-  res.redirect("/exams");
-});
-
-// DELETE -> 모의고사 삭제하기
-app.delete("/exams/:id", async (req, res) => {
-  const { id } = req.params;
-  await Exam.findByIdAndDelete(id);
-  res.redirect("/exams");
+  res.redirect(`/exams/${id}/modify`);
 });
 
 // DELETE -> 문제 삭제하기
@@ -132,6 +125,13 @@ app.delete("/exams/:id/q/:q_id", async (req, res) => {
   }
 
   res.redirect(`/exams/${id}/modify`);
+});
+
+// DELETE -> 모의고사 삭제하기
+app.delete("/exams/:id", async (req, res) => {
+  const { id } = req.params;
+  await Exam.findByIdAndDelete(id);
+  res.redirect("/exams");
 });
 
 app.listen(3000, () => {

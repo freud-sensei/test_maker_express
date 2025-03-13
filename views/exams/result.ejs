@@ -12,30 +12,35 @@
 
     <div class="container">
       <h1><%=exam.title%> 결과</h1>
-      <p><%=exam.questions.length%>문제 중 <%=points%>문제 맞히셨습니다.</p>
+      <div class="alert alert-light" role="alert">
+        <%=exam.questions.length%>문제 중 <%=points%>문제 맞히셨습니다.
+      </div>
+
+      <a href="/exams" class="btn btn-warning mb-3">돌아가기</a>
       <% for (const [q_index, question] of exam.questions.entries()) { %>
-      <h2>
-        <%=q_index + 1%>. <%=question.question%> <%= question.answer ===
-        report[question._id] ? "⭕":"❌" %>
-      </h2>
+      <div class="card mb-3">
+        <strong class="card-header"
+          ><%=q_index + 1%>. <%=question.question%> <%= question.answer ===
+          report[question._id] ? "⭕":"❌" %></strong
+        >
+        <div class="card-body">
+          <% for (let [opt_index, option] of question.options.entries()) {%>
+          <div class="form-check d-flex <%= opt_index === 4? '' : 'mb-2' %>">
+            <input class="form-check-input" type="radio" ,
+            name="<%=question._id%>" , value="<%=opt_index%>" disabled <%=
+            String(opt_index) === report[question._id] ? "checked" : ""%>
+            /><span class="badge ms-2 rounded-pill bg-secondary"
+              ><%=opt_index + 1%></span
+            >
+            <%=option%>><% if (question.answer === String(opt_index)) {%> ✅ <%
+            } %>
+          </div>
+          <%}%>
+        </div>
+        <div class="card-footer"><%=question.explanation%></div>
+      </div>
 
-      <ul>
-        <% for (let [opt_index, option] of question.options.entries()) {%>
-        <li class="choices">
-          <label
-            ><input type="radio" , name="<%=question._id%>" ,
-            value="<%=opt_index%>" disabled <%= String(opt_index) ===
-            report[question._id] ? "checked" : ""%> /><%=option%></label
-          >
-          <% if (question.answer === String(opt_index)) {%> ✅ <% } %>
-        </li>
-
-        <% } %>
-      </ul>
-      <p><%=question.explanation%></p>
       <% } %>
-
-      <a href="/exams">돌아가기</a>
     </div>
 
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>

@@ -4,114 +4,97 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-    <title>모의고사 만들기</title>
+    <title>모의고사 수정하기</title>
   </head>
   <body>
+    <!-- Navbar-->
     <%- include('../partials/navbar') %>
+
     <div class="container">
-      <h1><%=exam.title%></h1>
-      <a href="/exams">돌아가기</a>
+      <h1 class="mb-3"><%=exam.title%> 수정하기</h1>
+      <div class="mb-3">
+        <a href="/exams" class="btn btn-warning me-2">돌아가기</a>
+        <form
+          action="/exams/<%=exam._id%>?_method=DELETE"
+          method="post"
+          class="d-inline"
+        >
+          <button class="btn btn-danger">삭제하기</button>
+        </form>
+      </div>
 
-      <form action="/exams/<%=exam._id%>?_method=DELETE" method="post">
-        <button>삭제하기</button>
-      </form>
+      <!-- 기본사항 수정 -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <p>제목: <%=exam.title%></p>
+          <p>만든이: <%=exam.createdBy%></p>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#updateExamModal"
+          >
+            수정
+          </button>
+        </div>
+      </div>
 
-      <form action="/exams/<%=exam._id%>?_method=PUT" method="post">
-        <label for="createdBy">만든이</label>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          value="<%=exam.title%>"
-          required
-        />
-        <input
-          type="text"
-          name="createdBy"
-          id="createdBy"
-          value="<%=exam.createdBy%>"
-          required
-        />
-        <button>수정하기</button>
-      </form>
+      <!-- 기본사항 수정 Modal -->
+      <%- include('../partials/updateExamModal.ejs') %>
 
-      <button>인공지능으로 문제 만들기</button>
+      <!-- 질문 추가 -->
+      <h2 class="mb-3">현재 질문 목록</h2>
+      <div class="mb-3">
+        <button
+          class="btn btn-outline-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#addQuestionModal"
+        >
+          직접 문제 추가
+        </button>
+        <a class="btn btn-outline-primary">GPT로 문제 생성 (작업중)</a>
+      </div>
 
-      <p>수동으로 추가하기</p>
-      <form action="/exams/<%=exam._id%>/q/make" method="post">
-        <label for="question">문제</label>
-        <input type="text" name="question" id="question" required />
-        <ul>
-          <% for (let i = 0; i < 5; i++) { %>
-          <li>
-            <input type="radio" name="answer" value="<%=i%>"
-            id="choice-radio-<%=i%>" <%= i === 0 ? 'checked' : '' %> />
-            <input
-              type="text"
-              name="options[]"
-              id="choice-text-<%=i%>"
-              placeholder="<%=i + 1 %>번 보기"
-              required
-            />
-          </li>
-          <% } %>
-        </ul>
-        <label for="explanation">해설</label>
-        <textarea name="explanation" id="explanation"></textarea>
-        <button>추가하기</button>
-      </form>
+      <!-- 직접 질문 추가 Modal -->
+      <%- include('../partials/addQuestionModal.ejs') %>
+      <!-- GPT로 문제 생성 Modal (작업중)-->
 
-      <p>현재 질문 목록</p>
       <% for (const [q_index, question] of exam.questions.entries()) { %>
 
-      <form
-        action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=PUT"
-        method="post"
-      >
-        <h2><%=q_index + 1%>. <%=question.question%></h2>
+      <div class="card mb-3">
+        <strong class="card-header"
+          ><%=q_index + 1%>. <%=question.question%></strong
+        >
 
-        <label for="question">문제</label>
-        <input
-          type="text"
-          name="question"
-          id="question_<%=question._id%>"
-          value="<%=question.question%>"
-          required
-        />
-        <ul>
-          <% for (let i = 1; i <= 5; i++) {%>
-          <li>
-            <input type="radio" name="answer"
-            id="choice-radio-<%=i%>_<%=question._id%>" value="<%=i - 1%>" <%=
-            String(i - 1) === question.answer ? "checked" :""%>>
-            <input
-              type="text"
-              name="options[]"
-              id="choice-text-<%=i%>_<%=question._id%>"
-              value="<%=question.options[i - 1]%>"
-              required
-            />
-          </li>
+        <div class="card-body">
+          <% for (let [opt_index, option] of question.options.entries()) {%>
+
+          <div class="mb-2">
+            <span class="badge rounded-pill bg-secondary"
+              ><%=opt_index + 1%></span
+            >
+            <%=option%><% if (question.answer === String(opt_index)) {%> ✅ <% }
+            %>
+          </div>
           <% } %>
-        </ul>
-        <label for="explanation_<%=question._id%>">해설</label>
-        <textarea
-          name="explanation"
-          id="explanation_<%=question._id%>"
-          rows="10"
-        >
-  <%=question.explanation%></textarea
-        >
-        <button>수정하기</button>
-      </form>
-      <form
-        action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=DELETE"
-        method="post"
-      >
-        <button>삭제하기</button>
-      </form>
+          <a
+            class="btn btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#updateQuestionModal"
+            data-q_index="<%=q_index%>"
+            data-exam="<%=JSON.stringify(exam)%>"
+            data-question="<%=JSON.stringify(question)%>"
+            >수정</a
+          >
+        </div>
+
+        <div class="card-footer"><%=question.explanation%></div>
+      </div>
       <% } %>
     </div>
+
+    <!-- 문제 수정 Modal -->
+    <%- include('../partials/updateQuestionModal.ejs') %>
 
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   </body>

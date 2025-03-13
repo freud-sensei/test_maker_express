@@ -14,19 +14,24 @@
     <div class="container">
       <h1 class="mb-3"><%=exam.title%> 풀기</h1>
 
+      <% if (exam.questions.length === 0) { %>
+      <div class="alert alert-danger" role="alert">현재 문제가 없습니다.</div>
+      <% } else { %>
       <form id="examForm" method="POST" action="/exams/<%=exam._id%>">
-        <div class="btn-group mb-3">
-          <a href="/exams" class="btn btn-outline-danger">돌아가기</a
-          ><button class="btn btn-outline-primary">제출하기</button>
+        <div class="mb-3">
+          <a href="/exams" class="btn btn-warning me-2">돌아가기</a
+          ><button class="btn btn-primary">제출하기</button>
         </div>
         <% for (const [q_index, question] of exam.questions.entries()) { %>
 
         <div class="card mb-3">
-          <h6 class="card-header"><%=q_index + 1%>. <%=question.question%></h6>
+          <strong class="card-header"
+            ><%=q_index + 1%>. <%=question.question%></strong
+          >
 
           <div class="card-body">
             <% for (let [opt_index, option] of question.options.entries()) {%>
-            <div class="form-check">
+            <div class="form-check d-flex <%= opt_index === 4? '' : 'mb-2' %>">
               <label class="form-check-label"
                 ><input
                   class="form-check-input"
@@ -35,7 +40,10 @@
                   name="<%=question._id%>"
                   ,
                   value="<%=opt_index%>"
-                /><%=option%></label
+                /><span class="badge ms-2 rounded-pill bg-secondary"
+                  ><%=opt_index + 1%></span
+                >
+                <%=option%></label
               >
             </div>
 
@@ -45,6 +53,7 @@
 
         <% } %>
       </form>
+      <% } %>
     </div>
 
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
