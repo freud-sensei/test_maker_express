@@ -3,105 +3,116 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
     <title>모의고사 만들기</title>
   </head>
   <body>
-    <h1><%=exam.title%></h1>
-    <a href="/exams">돌아가기</a>
+    <%- include('../partials/navbar') %>
+    <div class="container">
+      <h1><%=exam.title%></h1>
+      <a href="/exams">돌아가기</a>
 
-    <form action="/exams/<%=exam._id%>?_method=DELETE" method="post">
-      <button>삭제하기</button>
-    </form>
+      <form action="/exams/<%=exam._id%>?_method=DELETE" method="post">
+        <button>삭제하기</button>
+      </form>
 
-    <form action="/exams/<%=exam._id%>?_method=PUT" method="post">
-      <label for="createdBy">만든이</label>
-      <input
-        type="text"
-        name="title"
-        id="title"
-        value="<%=exam.title%>"
-        required
-      />
-      <input
-        type="text"
-        name="createdBy"
-        id="createdBy"
-        value="<%=exam.createdBy%>"
-        required
-      />
-      <button>수정하기</button>
-    </form>
+      <form action="/exams/<%=exam._id%>?_method=PUT" method="post">
+        <label for="createdBy">만든이</label>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          value="<%=exam.title%>"
+          required
+        />
+        <input
+          type="text"
+          name="createdBy"
+          id="createdBy"
+          value="<%=exam.createdBy%>"
+          required
+        />
+        <button>수정하기</button>
+      </form>
 
-    <p>문제 추가하기</p>
-    <form action="/exams/<%=exam._id%>/q/make" method="post">
-      <label for="question">문제</label>
-      <input type="text" name="question" id="question" required />
-      <ul>
-        <% for (let i = 0; i < 5; i++) { %>
-        <li>
-          <input type="radio" name="answer" value="<%=i%>"
-          id="choice-radio-<%=i%>" <%= i === 0 ? 'checked' : '' %> />
-          <input
-            type="text"
-            name="options[]"
-            id="choice-text-<%=i%>"
-            placeholder="<%=i + 1 %>번 보기"
-            required
-          />
-        </li>
-        <% } %>
-      </ul>
-      <label for="explanation">해설</label>
-      <textarea name="explanation" id="explanation"></textarea>
-      <button>추가하기</button>
-    </form>
+      <button>인공지능으로 문제 만들기</button>
 
-    <p>현재 질문 목록</p>
-    <% for (const [q_index, question] of exam.questions.entries()) { %>
+      <p>수동으로 추가하기</p>
+      <form action="/exams/<%=exam._id%>/q/make" method="post">
+        <label for="question">문제</label>
+        <input type="text" name="question" id="question" required />
+        <ul>
+          <% for (let i = 0; i < 5; i++) { %>
+          <li>
+            <input type="radio" name="answer" value="<%=i%>"
+            id="choice-radio-<%=i%>" <%= i === 0 ? 'checked' : '' %> />
+            <input
+              type="text"
+              name="options[]"
+              id="choice-text-<%=i%>"
+              placeholder="<%=i + 1 %>번 보기"
+              required
+            />
+          </li>
+          <% } %>
+        </ul>
+        <label for="explanation">해설</label>
+        <textarea name="explanation" id="explanation"></textarea>
+        <button>추가하기</button>
+      </form>
 
-    <form
-      action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=DELETE"
-      method="post"
-    >
-      <button>삭제하기</button>
-    </form>
+      <p>현재 질문 목록</p>
+      <% for (const [q_index, question] of exam.questions.entries()) { %>
 
-    <form
-      action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=PUT"
-      method="post"
-    >
-      <h2><%=q_index + 1%>. <%=question.question%></h2>
-
-      <label for="question">문제</label>
-      <input
-        type="text"
-        name="question"
-        id="question_<%=question._id%>"
-        value="<%=question.question%>"
-        required
-      />
-      <ul>
-        <% for (let i = 1; i <= 5; i++) {%>
-        <li>
-          <input type="radio" name="answer"
-          id="choice-radio-<%=i%>_<%=question._id%>" value="<%=i - 1%>" <%=
-          String(i - 1) === question.answer ? "checked" :""%>>
-          <input
-            type="text"
-            name="options[]"
-            id="choice-text-<%=i%>_<%=question._id%>"
-            value="<%=question.options[i - 1]%>"
-            required
-          />
-        </li>
-        <% } %>
-      </ul>
-      <label for="explanation_<%=question._id%>">해설</label>
-      <textarea name="explanation" id="explanation_<%=question._id%>" rows="10">
-<%=question.explanation%></textarea
+      <form
+        action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=PUT"
+        method="post"
       >
-      <button>추가하기</button>
-    </form>
-    <% } %>
+        <h2><%=q_index + 1%>. <%=question.question%></h2>
+
+        <label for="question">문제</label>
+        <input
+          type="text"
+          name="question"
+          id="question_<%=question._id%>"
+          value="<%=question.question%>"
+          required
+        />
+        <ul>
+          <% for (let i = 1; i <= 5; i++) {%>
+          <li>
+            <input type="radio" name="answer"
+            id="choice-radio-<%=i%>_<%=question._id%>" value="<%=i - 1%>" <%=
+            String(i - 1) === question.answer ? "checked" :""%>>
+            <input
+              type="text"
+              name="options[]"
+              id="choice-text-<%=i%>_<%=question._id%>"
+              value="<%=question.options[i - 1]%>"
+              required
+            />
+          </li>
+          <% } %>
+        </ul>
+        <label for="explanation_<%=question._id%>">해설</label>
+        <textarea
+          name="explanation"
+          id="explanation_<%=question._id%>"
+          rows="10"
+        >
+  <%=question.explanation%></textarea
+        >
+        <button>수정하기</button>
+      </form>
+      <form
+        action="/exams/<%=exam._id%>/q/<%=question._id%>?_method=DELETE"
+        method="post"
+      >
+        <button>삭제하기</button>
+      </form>
+      <% } %>
+    </div>
+
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

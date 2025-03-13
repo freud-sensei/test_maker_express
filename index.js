@@ -22,6 +22,11 @@ function formatDate(date) {
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(express.static(path.join(__dirname, "static")));
+app.use(
+  "/bootstrap",
+  express.static(path.join(__dirname, "node_modules/bootstrap/dist"))
+);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -32,8 +37,7 @@ app.get("/", (req, res) => {
 
 // READ -> 모의고사 목록
 app.get("/exams", async (req, res) => {
-  const exams = await Exam.find();
-  exams.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // 내림차순 정렬
+  const exams = await Exam.find().sort({ createdAt: -1 });
   res.render("exams/index", { exams, formatDate });
 });
 
@@ -44,10 +48,6 @@ app.get("/exams/:id/modify", async (req, res) => {
   const exam = await Exam.findById(id).populate("questions");
   res.render("make/summary", { exam });
 });
-
-// READ -> 모의고사 채점 결과
-// TODO
-app.get("/exams/:id/results", async (req, res) => {});
 
 // READ -> 각 모의고사 문제풀이
 app.get("/exams/:id", async (req, res) => {
@@ -92,8 +92,6 @@ app.post("/exams/:id", async (req, res) => {
       points++;
     }
   }
-
-  // 세션은 아직 안 배웠으니까... 일단 여기서 바로 결과를 보여주는 걸로 하자.
   res.render("exams/result", { exam, report, points });
 });
 
@@ -121,7 +119,18 @@ app.delete("/exams/:id", async (req, res) => {
 // DELETE -> 문제 삭제하기
 app.delete("/exams/:id/q/:q_id", async (req, res) => {
   const { id, q_id } = req.params;
-  await Question.findByIdAndDelete(q_id);
+  const question = await Question.findByIdAndDelete(q_id);
+
+  // 해당 question이 담긴 Exam에서도 삭제해 줘야 함
+  // length 계산 오류를 막기 위함
+  if (question) {
+    // 해당 Exam에서 해당 question을 삭제
+    await Exam.updateMany(
+      { questions: q_id }, // 해당 question을 참조하는 모든 Exam을 찾음
+      { $pull: { questions: q_id } } // question의 ID를 questions 배열에서 삭제
+    );
+  }
+
   res.redirect(`/exams/${id}/modify`);
 });
 

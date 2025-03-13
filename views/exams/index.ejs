@@ -3,39 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
     <title>모의고사 선택</title>
   </head>
   <body>
-    <h1>모의고사 선택</h1>
-    <form action="/exams/make" method="post">
-      <input type="text" name="title" id="title" placeholder="제목" required />
-      <input
-        type="text"
-        name="createdBy"
-        id="createdBy"
-        placeholder="만든이"
-        required
-      />
-      <button>새로 만들기</button>
-    </form>
-    <table>
-      <tr>
-        <th>제목</th>
-        <th>문제 수</th>
-        <th>만든이</th>
-        <th>만든시간</th>
-        <th>수정하기</th>
-      </tr>
-      <% for (let exam of exams) { %>
-      <tr>
-        <td><a href="/exams/<%=exam._id%>"><%=exam.title%></a></td>
-        <td><%=exam.questions.length%></td>
-        <td><%=exam.createdBy%></td>
-        <td><%=formatDate(exam.createdAt)%></td>
-        <td><a href="/exams/<%=exam._id%>/modify">수정하기</a></td>
-      </tr>
+    <!-- navbar -->
+    <%- include('../partials/navbar') %>
 
-      <% } %>
-    </table>
+    <!-- 선택화면 -->
+    <div class="container">
+      <h1 class="mb-4">모의고사 선택</h1>
+      <form action="/exams/make" method="post">
+        <div class="input-group mb-3">
+          <input
+            class="form-control"
+            type="text"
+            name="title"
+            id="title"
+            placeholder="제목"
+            required
+          />
+          <input
+            class="form-control"
+            type="text"
+            name="createdBy"
+            id="createdBy"
+            placeholder="만든이"
+            required
+          />
+          <button class="btn btn-primary">새로 만들기</button>
+        </div>
+      </form>
+      <table class="table">
+        <tr>
+          <th>제목</th>
+          <th>문제 수</th>
+          <th>만든이</th>
+          <th>만든시간</th>
+          <th>수정하기</th>
+        </tr>
+        <% for (let exam of exams) { %>
+        <tr>
+          <td><a href="/exams/<%=exam._id%>"><%=exam.title%></a></td>
+          <td><%=exam.questions.length%></td>
+          <td><%=exam.createdBy%></td>
+          <td><%=formatDate(exam.createdAt)%></td>
+          <td><a href="/exams/<%=exam._id%>/modify">수정하기</a></td>
+        </tr>
+
+        <% } %>
+      </table>
+    </div>
+
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
