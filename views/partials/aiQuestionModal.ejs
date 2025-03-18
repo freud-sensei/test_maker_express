@@ -1,0 +1,53 @@
+<div
+  class="modal fade"
+  id="updateExamModal"
+  tabindex="-1"
+  aria-labelledby="updateModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">AI로 생성하기</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <form action="/exams/<%=exam._id%>/q/aigen" method="post">
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">제목</span>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value="<%=exam.title%>"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <span class="input-group-text">만든이</span>
+            <input
+              type="text"
+              name="createdBy"
+              id="createdBy"
+              value="<%=exam.createdBy%>"
+              class="form-control"
+              required
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-dismiss="modal">
+            생성하기
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

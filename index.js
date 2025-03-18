@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const { Question, Exam } = require("./models/exam");
+const { readTxt, aiMakeQuiz } = require("./aiMakeQuiz");
 
 dbConnect().catch((err) => console.log(err));
 
@@ -74,6 +75,25 @@ app.post("/exams/:id/q/make", async (req, res) => {
   await newQuestion.save();
   const exam = await Exam.findById(id);
   exam.questions.push(newQuestion._id);
+  await exam.save();
+  res.redirect(`/exams/${id}/modify`);
+});
+
+// CREATE -> AI 문제 생성 (aigen)
+app.post("/exams/:id/q/aigen", async (req, res) => {
+  const { id } = req.params;
+  // req.body 사용하는 거 들어가야함
+  const aiQuestions = await aiMakeQuiz("test", "Korean", 5);
+  const newQuestions = await Question.insertMany(aiQuestions);
+
+  // 질문의 id만 추출
+  const questionIds = newQuestions.map((q) => q._id);
+
+  // 그리고 exam에 넣어주기
+  const exam = await Exam.findById(id);
+  exam.questions.push(...questionIds);
+
+  // 그리고 exam에 id로 지정도 해야겠지
   await exam.save();
   res.redirect(`/exams/${id}/modify`);
 });

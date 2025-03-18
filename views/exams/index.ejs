@@ -37,18 +37,16 @@
       <table class="table">
         <tr>
           <th>제목</th>
-          <th>문제 수</th>
+          <th>문제수</th>
           <th>만든이</th>
-          <th>만든시간</th>
-          <th>수정하기</th>
+          <th>수정</th>
         </tr>
         <% for (let exam of exams) { %>
         <tr>
           <td><a href="/exams/<%=exam._id%>"><%=exam.title%></a></td>
           <td><%=exam.questions.length%></td>
           <td><%=exam.createdBy%></td>
-          <td><%=formatDate(exam.createdAt)%></td>
-          <td><a href="/exams/<%=exam._id%>/modify">수정하기</a></td>
+          <td><a href="/exams/<%=exam._id%>/modify">수정</a></td>
         </tr>
 
         <% } %>

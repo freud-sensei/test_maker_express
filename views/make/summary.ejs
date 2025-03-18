@@ -52,7 +52,15 @@
         >
           직접 문제 추가
         </button>
-        <a class="btn btn-outline-primary">GPT로 문제 생성 (작업중)</a>
+        <form
+          action="/exams/<%=exam._id%>/q/aigen"
+          method="post"
+          class="d-inline"
+        >
+          <button class="btn btn-outline-primary" id="aiButton">
+            AI로 문제 생성
+          </button>
+        </form>
       </div>
 
       <!-- 직접 질문 추가 Modal -->
@@ -97,5 +105,6 @@
     <%- include('../partials/updateQuestionModal.ejs') %>
 
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/summary.js"></script>
   </body>
 </html>
