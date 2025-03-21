@@ -23,60 +23,57 @@ function makeAnswer(record) {
 }
 
 async function aiMakeQuiz(input_data, language, num_questions) {
-  try {
-    if (input_data === "test") {
-      input_data = readTxt("seeds/example.txt");
-    }
-    const singleQuestion = z.object({
-      question: z.string().describe("Multiple choice question with 5 options"),
-      correct: z.string().describe("The correct option"),
-      options: z
-        .array(z.string())
-        .min(4)
-        .max(4)
-        .describe("List of incorrect options"),
-      explanation: z
-        .string()
-        .describe("Explanation on why the answer is correct for the question"),
-    });
+  console.log("문제 생성 중");
+  if (input_data === "test") {
+    input_data = readTxt("seeds/example.txt");
+  }
+  const singleQuestion = z.object({
+    question: z.string().describe("Multiple choice question with 5 options"),
+    correct: z.string().describe("The correct option"),
+    options: z
+      .array(z.string())
+      .min(4)
+      .max(4)
+      .describe("List of incorrect options"),
+    explanation: z
+      .string()
+      .describe("Explanation on why the answer is correct for the question"),
+  });
 
-    const questionMaker = z.object({
-      questions: z.array(singleQuestion).describe("List of questions"),
-    });
+  const questionMaker = z.object({
+    questions: z.array(singleQuestion).describe("List of questions"),
+  });
 
-    const model = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });
+  const model = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });
 
-    const structuredModel = model.withStructuredOutput(questionMaker, {
-      method: "json_mode",
-    });
+  const structuredModel = model.withStructuredOutput(questionMaker, {
+    method: "json_mode",
+  });
 
-    const prompt = new PromptTemplate({
-      template: `You are a study assistant which must generate unique {num_questions} multiple-choice questions for students.
+  const prompt = new PromptTemplate({
+    template: `You are a study assistant which must generate unique {num_questions} multiple-choice questions for students.
     By using [INPUT_DATA], make multiple choice questions in a structured format.
     You must make one correct answer, and four incorrect answers.
     The language must be in {language}.
     Tips: You must return {num_questions} questions, not more and not less.
     [INPUT_DATA]:
     {input_data}`,
-      inputVariables: ["num_questions", "language", "input_data"],
-    });
+    inputVariables: ["num_questions", "language", "input_data"],
+  });
 
-    const formattedPrompt = await prompt.format({
-      num_questions,
-      language,
-      input_data,
-    });
-    const responseJson = await structuredModel.invoke(formattedPrompt);
+  const formattedPrompt = await prompt.format({
+    num_questions,
+    language,
+    input_data,
+  });
+  const responseJson = await structuredModel.invoke(formattedPrompt);
 
-    for (let record of responseJson["questions"]) {
-      makeAnswer(record);
-    }
-
-    return responseJson["questions"];
-  } catch (err) {
-    console.log("Error in generating quiz:", err);
-    throw new Error("quiz generation failed");
+  console.log("문제 생성 완료");
+  for (let record of responseJson["questions"]) {
+    makeAnswer(record);
   }
+
+  return responseJson["questions"];
 }
 
 module.exports = { readTxt, aiMakeQuiz };

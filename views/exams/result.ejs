@@ -1,48 +1,32 @@
-<!DOCTYPE html>
-<html lang="kr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-    <title>채점 결과</title>
-  </head>
-  <body>
-    <!-- navbar -->
-    <%- include('../partials/navbar') %>
+<% layout('layouts/boilerplate.ejs') %>
+<div class="container">
+  <h1><%=exam.title%> 결과</h1>
+  <div class="alert alert-light" role="alert">
+    <%=exam.questions.length%>문제 중 <%=points%>문제 맞히셨습니다.
+  </div>
 
-    <div class="container">
-      <h1><%=exam.title%> 결과</h1>
-      <div class="alert alert-light" role="alert">
-        <%=exam.questions.length%>문제 중 <%=points%>문제 맞히셨습니다.
-      </div>
-
-      <a href="/exams" class="btn btn-warning mb-3">돌아가기</a>
-      <% for (const [q_index, question] of exam.questions.entries()) { %>
-      <div class="card mb-3">
-        <strong class="card-header"
-          ><%=q_index + 1%>. <%=question.question%> <%= question.answer ===
-          report[question._id] ? "⭕":"❌" %></strong
+  <a href="/exams" class="btn btn-warning mb-3">돌아가기</a>
+  <% for (const [q_index, question] of exam.questions.entries()) { %>
+  <div class="card mb-3">
+    <strong class="card-header"
+      ><%=q_index + 1%>. <%=question.question%> <%= question.answer ===
+      report[question._id] ? "⭕":"❌" %></strong
+    >
+    <div class="card-body">
+      <% for (let [opt_index, option] of question.options.entries()) {%>
+      <div class="form-check d-flex <%= opt_index === 4? '' : 'mb-2' %>">
+        <input class="form-check-input" type="radio" , name="<%=question._id%>"
+        , value="<%=opt_index%>" disabled <%= String(opt_index) ===
+        report[question._id] ? "checked" : ""%> /><span
+          class="badge ms-2 rounded-pill bg-secondary"
+          ><%=opt_index + 1%></span
         >
-        <div class="card-body">
-          <% for (let [opt_index, option] of question.options.entries()) {%>
-          <div class="form-check d-flex <%= opt_index === 4? '' : 'mb-2' %>">
-            <input class="form-check-input" type="radio" ,
-            name="<%=question._id%>" , value="<%=opt_index%>" disabled <%=
-            String(opt_index) === report[question._id] ? "checked" : ""%>
-            /><span class="badge ms-2 rounded-pill bg-secondary"
-              ><%=opt_index + 1%></span
-            >
-            <%=option%>><% if (question.answer === String(opt_index)) {%> ✅ <%
-            } %>
-          </div>
-          <%}%>
-        </div>
-        <div class="card-footer"><%=question.explanation%></div>
+        <%=option%>><% if (question.answer === String(opt_index)) {%> ✅ <% } %>
       </div>
-
-      <% } %>
+      <%}%>
     </div>
+    <div class="card-footer"><%=question.explanation%></div>
+  </div>
 
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+  <% } %>
+</div>

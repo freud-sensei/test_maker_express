@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const { Question, Exam } = require("./models/exam");
+const ejsMate = require("ejs-mate");
 const { readTxt, aiMakeQuiz } = require("./aiMakeQuiz");
 
 dbConnect().catch((err) => console.log(err));
@@ -28,7 +29,7 @@ app.use(
   "/bootstrap",
   express.static(path.join(__dirname, "node_modules/bootstrap/dist"))
 );
-
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -79,8 +80,8 @@ app.post("/exams/:id/q/make", async (req, res, next) => {
 // CREATE -> AI 문제 생성 (aigen)
 app.post("/exams/:id/q/aigen", async (req, res, next) => {
   const { id } = req.params;
-  // req.body 사용하는 거 들어가야함
-  const aiQuestions = await aiMakeQuiz("test", "Korean", 5);
+  console.log(req.body);
+  const aiQuestions = await aiMakeQuiz(req.body);
   const newQuestions = await Question.insertMany(aiQuestions);
 
   // 질문의 id만 추출
@@ -129,25 +130,20 @@ app.put("/exams/:id/", async (req, res, next) => {
 // DELETE -> 문제 삭제하기
 app.delete("/exams/:id/q/:q_id", async (req, res, next) => {
   const { id, q_id } = req.params;
-  const question = await Question.findByIdAndDelete(q_id);
-
-  // 해당 question이 담긴 Exam에서도 삭제해 줘야 함
-  // length 계산 오류를 막기 위함
-  if (question) {
-    // 해당 Exam에서 해당 question을 삭제
-    await Exam.updateMany(
-      { questions: q_id }, // 해당 question을 참조하는 모든 Exam을 찾음
-      { $pull: { questions: q_id } } // question의 ID를 questions 배열에서 삭제
-    );
-  }
-
+  await Question.findByIdAndDelete(q_id);
+  // 모의고사의 questions 배열에서도 연쇄 삭제
+  await Exam.findByIdAndUpdate(id, { $pull: { questions: q_id } });
   res.redirect(`/exams/${id}/modify`);
 });
 
 // DELETE -> 모의고사 삭제하기
 app.delete("/exams/:id", async (req, res, next) => {
   const { id } = req.params;
+  const exam = await Exam.findById(id);
+  const questions = exam.questions;
   await Exam.findByIdAndDelete(id);
+  // 모의고사의 questions 배열에 있던 문제들도 연쇄 삭제
+  await Question.deleteMany({ _id: { $in: questions } });
   res.redirect("/exams");
 });
 
@@ -166,7 +162,8 @@ app.use((err, req, res, next) => {
   if (!err.statusCode) {
     err.statusCode = 500;
   }
-  res.status(err.statusCode).send(err.message);
+  console.log(err);
+  res.status(err.statusCode).render("error/error", { err });
 });
 
 app.listen(3000, () => {

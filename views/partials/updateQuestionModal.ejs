@@ -19,7 +19,7 @@
       <form method="post" id="updateQuestionForm">
         <div class="modal-body">
           <div class="mb-3">
-            <label for="question" class="form-label">문제</label>
+            <label for="question_update" class="form-label">문제</label>
             <textarea
               name="question"
               id="question_update"
@@ -50,7 +50,7 @@
           <% } %>
 
           <div>
-            <label for="explanation" class="form-label">해설</label>
+            <label for="explanation_update" class="form-label">해설</label>
             <textarea
               name="explanation"
               id="explanation_update"
@@ -62,15 +62,19 @@
         </div>
 
         <div class="modal-footer">
-          <button class="btn btn-danger" form="deleteQuestionForm">
+          <button
+            class="btn btn-danger"
+            form="deleteQuestionForm"
+            id="deleteQuestionBtn"
+          >
             삭제하기
           </button>
-          <button class="btn btn-primary">수정하기</button>
+          <button class="btn btn-primary" id="updateQuestionBtn">
+            수정하기
+          </button>
         </div>
       </form>
       <form method="post" id="deleteQuestionForm" class="d-none"></form>
     </div>
   </div>
 </div>
-
-<script src="/updateQuestionModal.js"></script>

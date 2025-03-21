@@ -1,14 +1,16 @@
 <div
   class="modal fade"
-  id="updateExamModal"
+  id="aiQuestionModal"
   tabindex="-1"
-  aria-labelledby="updateModalLabel"
+  aria-labelledby="aiQuestionModalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">AI로 생성하기</h1>
+        <h1 class="modal-title fs-5" id="aiQuestionModalLabel">
+          AI로 생성하기
+        </h1>
         <button
           type="button"
           class="btn-close"
@@ -17,34 +19,70 @@
         ></button>
       </div>
 
-      <form action="/exams/<%=exam._id%>/q/aigen" method="post">
+      <form action="/exams/<%=exam._id%>/q/aigen" method="post" id="aiForm">
         <div class="modal-body">
-          <div class="input-group mb-3">
-            <span class="input-group-text">제목</span>
+          <div class="mb-3">
+            <label for="ai_num_questions" class="form-label"
+              >문제 수 (1개 - 15개 사이 선택 가능)</label
+            >
             <input
-              type="text"
-              name="title"
-              id="title"
-              value="<%=exam.title%>"
+              type="number"
+              name="num_questions"
+              id="ai_num_questions"
               class="form-control"
+              min="1"
+              max="15"
+              value="5"
               required
             />
           </div>
-          <div class="input-group">
-            <span class="input-group-text">만든이</span>
-            <input
-              type="text"
-              name="createdBy"
-              id="createdBy"
-              value="<%=exam.createdBy%>"
+
+          <div class="mb-3">
+            <label for="ai_input_data" class="form-label">학습자료</label>
+            <textarea
+              name="input_data"
+              id="ai_input_data"
               class="form-control"
+              rows="10"
               required
-            />
+            ></textarea>
+          </div>
+
+          <div>
+            <span class="form-label">언어 설정</span>
+            <div class="form-check">
+              <input
+                value="Korean"
+                class="form-check-input"
+                type="radio"
+                name="language"
+                id="ai_language_kor"
+                checked
+                required
+              />
+              <label class="form-check-label" for="ai_language_kor">
+                한국어
+              </label>
+            </div>
+            <div class="form-check">
+              <input
+                value="English"
+                class="form-check-input"
+                type="radio"
+                name="language"
+                id="ai_language_eng"
+                required
+              />
+              <label class="form-check-label" for="ai_language_eng">
+                English
+              </label>
+            </div>
           </div>
         </div>
+
         <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-dismiss="modal">
-            생성하기
+          <button class="btn btn-primary" id="aiButton" data-bs-dismiss="modal">
+            추가하기
           </button>
         </div>
       </form>

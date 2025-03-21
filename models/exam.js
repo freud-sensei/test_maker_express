@@ -17,7 +17,8 @@ const examSchema = new mongoose.Schema({
   questions: [{ type: mongoose.Schema.Types.ObjectID, ref: "Question" }], // 문제 배열
 });
 
+const Exam = mongoose.model("Exam", examSchema);
+
 const Question = mongoose.model("Question", questionSchema);
 
-const Exam = mongoose.model("Exam", examSchema);
 module.exports = { Question, Exam };

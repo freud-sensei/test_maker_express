@@ -1,58 +1,47 @@
-<!DOCTYPE html>
-<html lang="kr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-    <title>모의고사 선택</title>
-  </head>
-  <body>
-    <!-- navbar -->
-    <%- include('../partials/navbar') %>
-
-    <!-- 선택화면 -->
-    <div class="container">
-      <h1 class="mb-4">모의고사 선택</h1>
-      <form action="/exams/make" method="post">
-        <div class="input-group mb-3">
-          <input
-            class="form-control"
-            type="text"
-            name="title"
-            id="title"
-            placeholder="제목"
-            required
-          />
-          <input
-            class="form-control"
-            type="text"
-            name="createdBy"
-            id="createdBy"
-            placeholder="만든이"
-            required
-          />
-          <button class="btn btn-primary">새로 만들기</button>
-        </div>
-      </form>
-      <table class="table">
-        <tr>
-          <th>제목</th>
-          <th>문제수</th>
-          <th>만든이</th>
-          <th>수정</th>
-        </tr>
-        <% for (let exam of exams) { %>
-        <tr>
-          <td><a href="/exams/<%=exam._id%>"><%=exam.title%></a></td>
-          <td><%=exam.questions.length%></td>
-          <td><%=exam.createdBy%></td>
-          <td><a href="/exams/<%=exam._id%>/modify">수정</a></td>
-        </tr>
-
-        <% } %>
-      </table>
+<% layout('layouts/boilerplate.ejs') %>
+<!-- 선택화면 -->
+<div class="container">
+  <h1 class="mb-4">모의고사 선택</h1>
+  <form
+    action="/exams/make"
+    method="post"
+    class="col-8 offset-2 col-lg-6 offset-3"
+  >
+    <div class="input-group mb-3 col-6">
+      <input
+        class="form-control"
+        type="text"
+        name="title"
+        id="title"
+        placeholder="제목"
+        required
+      />
+      <input
+        class="form-control"
+        type="text"
+        name="createdBy"
+        id="createdBy"
+        placeholder="만든이"
+        required
+      />
+      <button class="btn btn-primary">새로 만들기</button>
     </div>
+  </form>
+  <table class="table">
+    <tr>
+      <th>제목</th>
+      <th>문제수</th>
+      <th>만든이</th>
+      <th>수정</th>
+    </tr>
+    <% for (let exam of exams) { %>
+    <tr>
+      <td><a href="/exams/<%=exam._id%>"><%=exam.title%></a></td>
+      <td><%=exam.questions.length%></td>
+      <td><%=exam.createdBy%></td>
+      <td><a href="/exams/<%=exam._id%>/modify">수정</a></td>
+    </tr>
 
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+    <% } %>
+  </table>
+</div>

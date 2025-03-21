@@ -1,0 +1,12 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+  <div
+    class="alert alert-danger col-8 offset-2 col-lg-6 offset-lg-3"
+    role="alert"
+  >
+    <h4 class="alert-heading">Error <%=err.statusCode%></h4>
+    <p><%=err.message%></p>
+    <hr />
+    <a href="/" class="btn btn-primary">메인화면으로 돌아가기</a>
+  </div>
+</div>

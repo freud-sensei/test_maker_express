@@ -1,110 +1,84 @@
-<!DOCTYPE html>
-<html lang="kr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
-    <title>모의고사 수정하기</title>
-  </head>
-  <body>
-    <!-- Navbar-->
-    <%- include('../partials/navbar') %>
+<% layout('layouts/boilerplate.ejs') %>
+<div class="container">
+  <h1 class="mb-3"><%=exam.title%> 수정하기</h1>
+  <div class="mb-3">
+    <a href="/exams" class="btn btn-warning me-2">돌아가기</a>
+  </div>
 
-    <div class="container">
-      <h1 class="mb-3"><%=exam.title%> 수정하기</h1>
-      <div class="mb-3">
-        <a href="/exams" class="btn btn-warning me-2">돌아가기</a>
-        <form
-          action="/exams/<%=exam._id%>?_method=DELETE"
-          method="post"
-          class="d-inline"
-        >
-          <button class="btn btn-danger">삭제하기</button>
-        </form>
-      </div>
+  <!-- 기본사항 수정 -->
+  <div class="card mb-3">
+    <div class="card-body">
+      <p>제목: <%=exam.title%></p>
+      <p>만든이: <%=exam.createdBy%></p>
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#updateExamModal"
+      >
+        수정
+      </button>
+    </div>
+  </div>
 
-      <!-- 기본사항 수정 -->
-      <div class="card mb-3">
-        <div class="card-body">
-          <p>제목: <%=exam.title%></p>
-          <p>만든이: <%=exam.createdBy%></p>
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#updateExamModal"
-          >
-            수정
-          </button>
-        </div>
-      </div>
+  <!-- 기본사항 수정 Modal -->
+  <%- include('../partials/updateExamModal.ejs') %>
 
-      <!-- 기본사항 수정 Modal -->
-      <%- include('../partials/updateExamModal.ejs') %>
+  <!-- 질문 추가 -->
+  <h2 class="mb-3">현재 질문 목록</h2>
+  <div id="liveAlertPlaceholder"></div>
+  <div class="mb-3">
+    <button
+      class="btn btn-outline-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#addQuestionModal"
+    >
+      직접 문제 추가
+    </button>
+    <button
+      class="btn btn-outline-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#aiQuestionModal"
+    >
+      AI로 문제 생성
+    </button>
+  </div>
 
-      <!-- 질문 추가 -->
-      <h2 class="mb-3">현재 질문 목록</h2>
-      <div class="mb-3">
-        <button
-          class="btn btn-outline-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#addQuestionModal"
-        >
-          직접 문제 추가
-        </button>
-        <form
-          action="/exams/<%=exam._id%>/q/aigen"
-          method="post"
-          class="d-inline"
-        >
-          <button class="btn btn-outline-primary" id="aiButton">
-            AI로 문제 생성
-          </button>
-        </form>
-      </div>
+  <!-- 직접 질문 추가 Modal -->
+  <%- include('../partials/addQuestionModal.ejs') %>
+  <!-- GPT로 문제 생성 Modal (작업중)-->
+  <%- include('../partials/aiQuestionModal.ejs') %> <% for (const [q_index,
+  question] of exam.questions.entries()) { %>
 
-      <!-- 직접 질문 추가 Modal -->
-      <%- include('../partials/addQuestionModal.ejs') %>
-      <!-- GPT로 문제 생성 Modal (작업중)-->
+  <div class="card mb-3">
+    <strong class="card-header"
+      ><%=q_index + 1%>. <%=question.question%></strong
+    >
 
-      <% for (const [q_index, question] of exam.questions.entries()) { %>
+    <div class="card-body">
+      <% for (let [opt_index, option] of question.options.entries()) {%>
 
-      <div class="card mb-3">
-        <strong class="card-header"
-          ><%=q_index + 1%>. <%=question.question%></strong
-        >
-
-        <div class="card-body">
-          <% for (let [opt_index, option] of question.options.entries()) {%>
-
-          <div class="mb-2">
-            <span class="badge rounded-pill bg-secondary"
-              ><%=opt_index + 1%></span
-            >
-            <%=option%><% if (question.answer === String(opt_index)) {%> ✅ <% }
-            %>
-          </div>
-          <% } %>
-          <a
-            class="btn btn-outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#updateQuestionModal"
-            data-q_index="<%=q_index%>"
-            data-exam="<%=JSON.stringify(exam)%>"
-            data-question="<%=JSON.stringify(question)%>"
-            >수정</a
-          >
-        </div>
-
-        <div class="card-footer"><%=question.explanation%></div>
+      <div class="mb-2">
+        <span class="badge rounded-pill bg-secondary"><%=opt_index + 1%></span>
+        <%=option%><% if (question.answer === String(opt_index)) {%> ✅ <% } %>
       </div>
       <% } %>
+      <a
+        class="btn btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#updateQuestionModal"
+        data-q_index="<%=q_index%>"
+        data-exam="<%=JSON.stringify(exam)%>"
+        data-question="<%=JSON.stringify(question)%>"
+        >수정</a
+      >
     </div>
 
-    <!-- 문제 수정 Modal -->
-    <%- include('../partials/updateQuestionModal.ejs') %>
+    <div class="card-footer"><%=question.explanation%></div>
+  </div>
+  <% } %>
+  <!-- 문제 수정 Modal -->
+  <%- include('../partials/updateQuestionModal.ejs') %>
+</div>
 
-    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/summary.js"></script>
-  </body>
-</html>
+<script src="/summary.js"></script>
