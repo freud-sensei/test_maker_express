@@ -2,11 +2,7 @@
 <!-- 선택화면 -->
 <div class="container">
   <h1 class="mb-4">모의고사 선택</h1>
-  <form
-    action="/exams/make"
-    method="post"
-    class="col-8 offset-2 col-lg-6 offset-3"
-  >
+  <form action="/make" method="post" class="col-8 offset-2 col-lg-6 offset-3">
     <div class="input-group mb-3 col-6">
       <input
         class="form-control"
@@ -39,7 +35,7 @@
       <td><a href="/exams/<%=exam._id%>"><%=exam.title%></a></td>
       <td><%=exam.questions.length%></td>
       <td><%=exam.createdBy%></td>
-      <td><a href="/exams/<%=exam._id%>/modify">수정</a></td>
+      <td><a href="/make/<%=exam._id%>">수정</a></td>
     </tr>
 
     <% } %>

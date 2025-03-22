@@ -78,14 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .querySelector("#updateQuestionForm")
       .setAttribute(
         "action",
-        `/exams/${exam._id}/q/${question._id}?_method=PUT`
+        `/make/${exam._id}/q/${question._id}?_method=PUT`
       );
 
     document
       .querySelector("#deleteQuestionForm")
       .setAttribute(
         "action",
-        `/exams/${exam._id}/q/${question._id}?_method=DELETE`
+        `/make/${exam._id}/q/${question._id}?_method=DELETE`
       );
   });
 });

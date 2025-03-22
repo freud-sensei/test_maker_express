@@ -6,7 +6,7 @@
   </div>
 
   <a href="/exams" class="btn btn-warning mb-3">돌아가기</a>
-  <div class="row row-cols row-cols-lg-2 g-4">
+  <div class="row row-cols-1 row-cols-lg-2 g-4">
     <% for (const [q_index, question] of exam.questions.entries()) { %>
     <div class="col">
       <%- include('../partials/resultQuestionCard', {q_index, question}) %>

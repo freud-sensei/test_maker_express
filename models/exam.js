@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+// 유저 스키마
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true }, // ID
+  password: { type: String, required: true, minLength: 8 }, // 비밀번호
+  bio: { type: String }, // 자기소개
+  exams: [{ type: mongoose.Schema.Types.ObjectID, ref: "Exam" }], // 시험지 배열,
+});
+
 // 문제 스키마
 const questionSchema = new mongoose.Schema({
   question: { type: String, required: true }, // 문제
@@ -18,7 +26,7 @@ const examSchema = new mongoose.Schema({
 });
 
 const Exam = mongoose.model("Exam", examSchema);
-
 const Question = mongoose.model("Question", questionSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = { Question, Exam };
+module.exports = { User, Question, Exam };
