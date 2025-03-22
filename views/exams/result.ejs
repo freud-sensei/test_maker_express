@@ -6,27 +6,11 @@
   </div>
 
   <a href="/exams" class="btn btn-warning mb-3">돌아가기</a>
-  <% for (const [q_index, question] of exam.questions.entries()) { %>
-  <div class="card mb-3">
-    <strong class="card-header"
-      ><%=q_index + 1%>. <%=question.question%> <%= question.answer ===
-      report[question._id] ? "⭕":"❌" %></strong
-    >
-    <div class="card-body">
-      <% for (let [opt_index, option] of question.options.entries()) {%>
-      <div class="form-check d-flex <%= opt_index === 4? '' : 'mb-2' %>">
-        <input class="form-check-input" type="radio" , name="<%=question._id%>"
-        , value="<%=opt_index%>" disabled <%= String(opt_index) ===
-        report[question._id] ? "checked" : ""%> /><span
-          class="badge ms-2 rounded-pill bg-secondary"
-          ><%=opt_index + 1%></span
-        >
-        <%=option%>><% if (question.answer === String(opt_index)) {%> ✅ <% } %>
-      </div>
-      <%}%>
+  <div class="row row-cols row-cols-lg-2 g-4">
+    <% for (const [q_index, question] of exam.questions.entries()) { %>
+    <div class="col">
+      <%- include('../partials/resultQuestionCard', {q_index, question}) %>
     </div>
-    <div class="card-footer"><%=question.explanation%></div>
+    <% } %>
   </div>
-
-  <% } %>
 </div>

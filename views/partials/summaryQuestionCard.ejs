@@ -1,0 +1,25 @@
+<div class="card mb-3">
+  <strong class="card-header d-flex justify-content-between align-items-center"
+    ><%=q_index + 1%>. <%=question.question%><a
+      class="btn btn-outline-primary btn-sm"
+      data-bs-toggle="modal"
+      data-bs-target="#updateQuestionModal"
+      data-q_index="<%=q_index%>"
+      data-exam="<%=JSON.stringify(exam)%>"
+      data-question="<%=JSON.stringify(question)%>"
+      >수정</a
+    ></strong
+  >
+
+  <div class="card-body">
+    <% for (let [opt_index, option] of question.options.entries()) {%>
+
+    <div class="mb-2">
+      <span class="badge rounded-pill bg-secondary"><%=opt_index + 1%></span>
+      <%=option%><% if (question.answer === String(opt_index)) {%> ✅ <% } %>
+    </div>
+    <% } %>
+  </div>
+
+  <div class="card-footer"><%=question.explanation%></div>
+</div>

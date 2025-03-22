@@ -1,0 +1,23 @@
+<div class="card">
+  <strong class="card-header"><%=q_index + 1%>. <%=question.question%></strong>
+  <div class="card-body">
+    <% for (let [opt_index, option] of question.options.entries()) {%>
+    <div class="form-check d-flex <%= opt_index === 4? '' : 'mb-2' %>">
+      <label class="form-check-label"
+        ><input
+          class="form-check-input"
+          type="radio"
+          ,
+          name="<%=question._id%>"
+          ,
+          value="<%=opt_index%>"
+        /><span class="badge ms-2 rounded-pill bg-secondary"
+          ><%=opt_index + 1%></span
+        >
+        <%=option%></label
+      >
+    </div>
+
+    <% } %>
+  </div>
+</div>

@@ -139,11 +139,9 @@ app.delete("/exams/:id/q/:q_id", async (req, res, next) => {
 // DELETE -> 모의고사 삭제하기
 app.delete("/exams/:id", async (req, res, next) => {
   const { id } = req.params;
-  const exam = await Exam.findById(id);
-  const questions = exam.questions;
-  await Exam.findByIdAndDelete(id);
+  const exam = await Exam.findByIdAndDelete(id);
   // 모의고사의 questions 배열에 있던 문제들도 연쇄 삭제
-  await Question.deleteMany({ _id: { $in: questions } });
+  await Question.deleteMany({ _id: { $in: exam.questions } });
   res.redirect("/exams");
 });
 
