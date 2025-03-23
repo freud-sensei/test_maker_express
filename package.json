@@ -21,10 +21,12 @@
     "@langchain/community": "^0.3.36",
     "axios": "^1.8.3",
     "bootstrap": "^5.3.3",
+    "connect-flash": "^0.1.1",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
     "express": "^5.0.1",
+    "express-session": "^1.18.1",
     "langchain": "^0.3.19",
     "method-override": "^3.0.0",
     "mongoose": "^8.12.1"

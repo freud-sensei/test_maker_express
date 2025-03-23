@@ -1,11 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const session = require("express-session");
 const examsRoutes = require("./routes/exams");
 const makeRoutes = require("./routes/make");
 const userRoutes = require("./routes/user");
+
+const sessionOptions = {
+  secret: "thisisnotagoodsecret",
+  resave: false,
+  saveUninitialized: false,
+};
 
 dbConnect().catch((err) => console.log(err));
 
@@ -22,9 +30,17 @@ app.use(
   "/bootstrap",
   express.static(path.join(__dirname, "node_modules/bootstrap/dist"))
 );
+app.use(session(sessionOptions));
+app.use(flash());
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// 플래시
+app.use((req, res, next) => {
+  res.locals.messages = req.flash("success");
+  next();
+});
 
 // 라우터
 app.use("/exams", examsRoutes);

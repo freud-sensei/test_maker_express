@@ -41,7 +41,11 @@ async function aiMakeQuiz(input_data, language, num_questions) {
   });
 
   const questionMaker = z.object({
-    questions: z.array(singleQuestion).describe("List of questions"),
+    questions: z
+      .array(singleQuestion)
+      .min(num_questions)
+      .max(num_questions)
+      .describe("List of questions"),
   });
 
   const model = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });

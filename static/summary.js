@@ -33,16 +33,7 @@ function doubleCheck(event, action) {
 // AI 문제 생성중...
 document.querySelector("#aiForm").addEventListener("submit", function (e) {
   const alertPlaceholder = document.querySelector("#liveAlertPlaceholder");
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = [
-    `<div class="alert alert-info alert-dismissible" role="alert">`,
-    `   <div>AI로 문제 생성 중...</div>`,
-    `<div class="spinner-grow d-inline" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>`,
-    "</div>",
-  ].join("");
-  alertPlaceholder.append(wrapper);
+  alertPlaceholder.innerHTML = `<div class="alert alert-info alert-dismissible" role="alert">AI로 문제 생성 중...</div>`;
 });
 
 // 모달 처리
