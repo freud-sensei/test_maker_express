@@ -8,6 +8,7 @@ const session = require("express-session");
 const examsRoutes = require("./routes/exams");
 const makeRoutes = require("./routes/make");
 const userRoutes = require("./routes/user");
+const questionsRoutes = require("./routes/questions");
 
 const sessionOptions = {
   secret: "thisisnotagoodsecret",
@@ -45,6 +46,7 @@ app.use((req, res, next) => {
 // 라우터
 app.use("/exams", examsRoutes);
 app.use("/make", makeRoutes);
+app.use("/make/:id/q", questionsRoutes);
 app.use("/user", userRoutes);
 
 app.get("/", (req, res) => {

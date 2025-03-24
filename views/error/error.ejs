@@ -5,8 +5,11 @@
     role="alert"
   >
     <h4 class="alert-heading">Error <%=err.statusCode%></h4>
-    <p><%=err.message%></p>
+    <p class="text-wrap"><%=err.message%></p>
     <hr />
-    <a href="/" class="btn btn-primary">메인화면으로 돌아가기</a>
+    <button class="btn btn-primary" onclick="window.history.back()">
+      이전 화면으로 돌아가기
+    </button>
+    <a href="/" class="btn btn-primary">메인으로 돌아가기</a>
   </div>
 </div>

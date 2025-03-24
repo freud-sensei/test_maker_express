@@ -1,6 +1,4 @@
 const express = require("express");
-const flash = require("connect-flash");
-
 const router = express.Router();
 const { Exam, Question } = require("../models/exam");
 const { readTxt, aiMakeQuiz } = require("../aiMakeQuiz");
@@ -10,7 +8,6 @@ const { readTxt, aiMakeQuiz } = require("../aiMakeQuiz");
 
 // UPDATE -> 모의고사 변경하기 form 제시
 router.get("/:id", async (req, res, next) => {
-  console.log("HAHA", res.locals.messages);
   const { id } = req.params;
   // populate: id값을 이용해 Questions 모델에서 데이터를 한 번에 가져옴
   const exam = await Exam.findById(id).populate("questions");
@@ -57,29 +54,11 @@ router.post("/:id/aigen", async (req, res, next) => {
   res.redirect(`/make/${id}`);
 });
 
-// UPDATE -> 문제 변경하기
-router.put("/:id/q/:q_id", async (req, res, next) => {
-  const { id, q_id } = req.params;
-  await Question.findByIdAndUpdate(q_id, req.body);
-  req.flash("success", `문제 변경 완료!`);
-  res.redirect(`/make/${id}`);
-});
-
 // UPDATE -> 모의고사 변경하기
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
   await Exam.findByIdAndUpdate(id, req.body);
   req.flash("success", `모의고사 정보 변경 완료!`);
-  res.redirect(`/make/${id}`);
-});
-
-// DELETE -> 문제 삭제하기
-router.delete("/:id/q/:q_id", async (req, res, next) => {
-  const { id, q_id } = req.params;
-  await Question.findByIdAndDelete(q_id);
-  // 모의고사의 questions 배열에서도 연쇄 삭제
-  await Exam.findByIdAndUpdate(id, { $pull: { questions: q_id } });
-  req.flash("success", `문제 삭제 완료!`);
   res.redirect(`/make/${id}`);
 });
 
