@@ -25,8 +25,17 @@ const examSchema = new mongoose.Schema({
   questions: [{ type: mongoose.Schema.Types.ObjectID, ref: "Question" }], // 문제 배열
 });
 
+// 성적표 스키마
+const reportSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectID, ref: "User" },
+  exam: { type: mongoose.Schema.Types.ObjectID, ref: "Exam" },
+  selected: { type: Map, of: String },
+  points: { type: Number, default: 0 },
+});
+
 const Exam = mongoose.model("Exam", examSchema);
 const Question = mongoose.model("Question", questionSchema);
 const User = mongoose.model("User", userSchema);
+const Report = mongoose.model("Report", reportSchema);
 
-module.exports = { User, Question, Exam };
+module.exports = { User, Question, Exam, Report };

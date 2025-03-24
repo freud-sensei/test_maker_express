@@ -12,8 +12,9 @@ const questionsRoutes = require("./routes/questions");
 
 const sessionOptions = {
   secret: "thisisnotagoodsecret",
-  resave: false,
-  saveUninitialized: false,
+  resave: false, // 세션이 변경되지 않으면 저장하지 않음
+  saveUninitialized: false, // 초기화되지 않은 세션은 저장하지 않음
+  cookie: { secure: false }, // HTTPS에서만 세션쿠키를 보냄
 };
 
 dbConnect().catch((err) => console.log(err));

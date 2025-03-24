@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Exam } = require("../models/exam");
+const { Exam, Report } = require("../models/exam");
 
 function formatDate(date) {
   return new Intl.DateTimeFormat("ko-KR", {
@@ -16,6 +16,19 @@ router.get("/", async (req, res, next) => {
   res.render("exams/index", { exams, formatDate });
 });
 
+// READ -> 모의고사 결과 보여주기
+router.get("/result/:id", async (req, res, next) => {
+  const report = await Report.findById(req.params.id).populate({
+    path: "exam",
+    populate: { path: "questions" },
+  });
+  console.log(report);
+  const { exam, selected, points } = report;
+  console.log(exam.questions.entries());
+
+  res.render("exams/result", { exam, selected, points });
+});
+
 // READ -> 각 모의고사 문제풀이
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
@@ -24,21 +37,23 @@ router.get("/:id", async (req, res, next) => {
   res.render("exams/take", { exam });
 });
 
-// READ -> 모의고사 채점 후 결과 보여주기
+// CREATE -> 모의고사 채점, 성적표 추가
 router.post("/:id", async (req, res, next) => {
   const { id } = req.params;
   const exam = await Exam.findById(id).populate("questions");
-  const report = {};
+  const selected = {};
   let points = 0;
 
   for (let question of exam.questions) {
     const [key, value] = [question._id, req.body[question._id]];
-    report[key] = value;
+    selected[key] = value;
     if (req.body[key] === question.answer) {
       points++;
     }
   }
-  res.render("exams/result", { exam, report, points });
+
+  const result = await Report.insertOne({ exam, selected, points });
+  res.redirect(`/exams/result/${result._id}`);
 });
 
 module.exports = router;

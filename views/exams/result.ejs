@@ -9,7 +9,8 @@
   <div class="row row-cols-1 row-cols-lg-2 g-4">
     <% for (const [q_index, question] of exam.questions.entries()) { %>
     <div class="col">
-      <%- include('../partials/resultQuestionCard', {q_index, question}) %>
+      <%- include('../partials/resultQuestionCard', {q_index, question,
+      selected}) %>
     </div>
     <% } %>
   </div>
