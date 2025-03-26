@@ -1,0 +1,62 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<div class="col-12 col-md-6 offset-md-3">
+  <h1 class="mb-3">회원 가입</h1>
+  <form action="/users/register" , method="POST" id="registerForm" novalidate>
+    <!-- ID -->
+    <div class="mb-3">
+      <label for="username" class="form-label">ID</label>
+
+      <input
+        type="text"
+        name="username"
+        id="username"
+        class="form-control"
+        required
+      />
+      <div class="invalid-feedback"></div>
+    </div>
+    <!-- 비밀번호 -->
+    <div class="mb-3">
+      <label for="password" class="form-label">비밀번호</label>
+
+      <input
+        type="password"
+        name="password"
+        id="password"
+        class="form-control"
+        required
+      />
+      <div class="invalid-feedback"></div>
+    </div>
+    <!-- 비밀번호 확인 -->
+    <div class="mb-3">
+      <label for="rePassword" class="form-label">비밀번호 확인</label>
+
+      <input type="password" id="rePassword" class="form-control" required />
+      <div class="invalid-feedback"></div>
+    </div>
+    <!-- 닉네임 -->
+    <div class="mb-3">
+      <label for="nickname" class="form-label">닉네임</label>
+
+      <input
+        type="text"
+        name="nickname"
+        id="nickname"
+        class="form-control"
+        required
+      />
+      <div class="invalid-feedback"></div>
+    </div>
+    <!-- 자기소개 -->
+    <div class="mb-3">
+      <label for="bio" class="form-label">자기소개 (선택)</label>
+      <textarea name="bio" id="bio" rows="4" class="form-control"></textarea>
+      <div class="invalid-feedback"></div>
+    </div>
+    <!-- 제출 -->
+    <button class="btn btn-primary" onclick="dupCheck()">가입하기</button>
+  </form>
+</div>
+<script src="/register.js"></script>

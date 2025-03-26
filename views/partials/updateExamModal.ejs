@@ -23,6 +23,7 @@
         action="/make/<%=exam._id%>?_method=PUT"
         method="post"
         id="updateExamForm"
+        novalidate
       >
         <div class="modal-body">
           <div class="input-group mb-3">
@@ -35,17 +36,7 @@
               class="form-control"
               required
             />
-          </div>
-          <div class="input-group">
-            <span class="input-group-text">만든이</span>
-            <input
-              type="text"
-              name="createdBy"
-              id="createdBy"
-              value="<%=exam.createdBy%>"
-              class="form-control"
-              required
-            />
+            <div class="invalid-feedback"></div>
           </div>
         </div>
         <div class="modal-footer">

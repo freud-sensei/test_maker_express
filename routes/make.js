@@ -2,12 +2,18 @@ const express = require("express");
 const router = express.Router();
 const { Exam, Question } = require("../models/exam");
 const { readTxt, aiMakeQuiz } = require("../aiMakeQuiz");
+const { isLoggedIn } = require("../middleware");
 
 // GET -> 모의고사 만들기 / 수정하기 창
-// TBD
+router.get("/", isLoggedIn, async (req, res, next) => {
+  const exams = await Exam.find({
+    createdBy: res.locals.currentUser.nickname,
+  }).sort({ createdAt: -1 });
+  res.render("make/index", { exams });
+});
 
 // UPDATE -> 모의고사 변경하기 form 제시
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
   // populate: id값을 이용해 Questions 모델에서 데이터를 한 번에 가져옴
   const exam = await Exam.findById(id).populate("questions");
@@ -16,10 +22,14 @@ router.get("/:id", async (req, res, next) => {
 
 // CREATE -> 모의고사 만들기
 router.post("/", async (req, res, next) => {
-  const newExam = new Exam(req.body);
+  const { title } = req.body;
+  const newExam = new Exam({
+    title,
+    createdBy: res.locals.currentUser.nickname,
+  });
   await newExam.save();
   req.flash("success", `모의고사 생성 완료!`);
-  res.redirect(`/exams`);
+  res.redirect(`/make`);
 });
 
 // CREATE -> 문제 만들기

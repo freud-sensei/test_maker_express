@@ -1,0 +1,30 @@
+<% layout('layouts/boilerplate.ejs') %>
+<!-- 선택화면 -->
+<h1 class="mb-4">모의고사 수정하기</h1>
+
+<form action="/make" method="post" class="col-8 offset-2 col-lg-6 offset-lg-3">
+  <div class="input-group mb-3 col-6">
+    <input
+      class="form-control"
+      type="text"
+      name="title"
+      id="title"
+      placeholder="제목"
+      required
+    />
+    <button class="btn btn-primary">새로 만들기</button>
+  </div>
+</form>
+<table class="table">
+  <tr>
+    <th>제목</th>
+    <th>문제수</th>
+  </tr>
+  <% for (let exam of exams) { %>
+  <tr>
+    <td><a href="/make/<%=exam._id%>"><%=exam.title%></a></td>
+    <td><%=exam.questions.length%></td>
+  </tr>
+
+  <% } %>
+</table>

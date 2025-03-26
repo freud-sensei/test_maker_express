@@ -1,6 +1,14 @@
 // 정말 ..하시겠습니까?
 const forms = [
   {
+    form: document.querySelector("#addQuestionForm"),
+    action: "추가",
+  },
+  {
+    form: document.querySelector("#aiForm"),
+    action: "추가",
+  },
+  {
     form: document.querySelector("#updateQuestionForm"),
     action: "수정",
   },
@@ -18,8 +26,27 @@ const forms = [
   },
 ];
 forms.forEach(({ form, action }) => {
-  form.addEventListener("submit", function (e) {
-    doubleCheck(e, action);
+  form.addEventListener("submit", function (event) {
+    console.log(form, form.checkValidity());
+    if (!form.checkValidity()) {
+      form.querySelectorAll("input, textarea").forEach((elem) => {
+        if (!elem.checkValidity()) {
+          elem.classList.add("is-invalid");
+          console.log(elem, elem.parentElement);
+          elem.parentElement.querySelector(".invalid-feedback").innerText =
+            elem.validationMessage;
+        } else {
+          elem.classList.remove("is-invalid");
+        }
+      });
+      event.preventDefault();
+      event.stopPropagation();
+    } else {
+      form.querySelectorAll("input, textarea").forEach((elem) => {
+        elem.classList.remove("is-invalid");
+      });
+      doubleCheck(event, action);
+    }
   });
 });
 // 확인 누를 때만 submit 진행
@@ -27,6 +54,7 @@ function doubleCheck(event, action) {
   const isConfirmed = confirm(`정말로 ${action}하시겠습니까?`);
   if (!isConfirmed) {
     event.preventDefault();
+    event.stopPropagation();
   }
 }
 

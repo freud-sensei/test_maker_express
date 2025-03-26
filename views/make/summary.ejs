@@ -1,64 +1,61 @@
 <% layout('layouts/boilerplate.ejs') %>
-<div class="container">
-  <h1 class="mb-3"><%=exam.title%> 수정하기</h1>
-  <div class="mb-3">
-    <a href="/exams" class="btn btn-warning me-2">돌아가기</a>
-  </div>
-
-  <!-- 기본사항 수정 -->
-  <div class="card mb-3">
-    <div class="card-body">
-      <p>제목: <%=exam.title%></p>
-      <p>만든이: <%=exam.createdBy%></p>
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#updateExamModal"
-      >
-        수정
-      </button>
-    </div>
-  </div>
-
-  <!-- 기본사항 수정 Modal -->
-  <%- include('../partials/updateExamModal.ejs') %>
-
-  <!-- 질문 추가 -->
-  <h2 class="mb-3">현재 질문 목록</h2>
-  <%- include('../partials/liveAlert', {messages}) %>
-  <div class="mb-3">
-    <button
-      class="btn btn-outline-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#addQuestionModal"
-    >
-      직접 문제 추가
-    </button>
-    <button
-      class="btn btn-outline-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#aiQuestionModal"
-    >
-      AI로 문제 생성
-    </button>
-  </div>
-
-  <!-- 직접 질문 추가 Modal -->
-  <%- include('../partials/addQuestionModal.ejs') %>
-  <!-- GPT로 문제 생성 Modal-->
-  <%- include('../partials/aiQuestionModal.ejs') %>
-
-  <div class="row row-cols-1 row-cols-lg-2 g-4">
-    <% for (const [q_index, question] of exam.questions.entries()) { %>
-    <div class="col">
-      <%- include('../partials/summaryQuestionCard',{q_index, question})%>
-    </div>
-    <% } %>
-  </div>
-
-  <!-- 문제 수정 Modal -->
-  <%- include('../partials/updateQuestionModal.ejs') %>
+<h1 class="mb-3"><%=exam.title%> 수정하기</h1>
+<div class="mb-3">
+  <a href="/make" class="btn btn-warning me-2">돌아가기</a>
 </div>
+
+<!-- 기본사항 수정 -->
+<div class="card mb-3">
+  <div class="card-body">
+    <p>제목: <%=exam.title%></p>
+    <p>만든이: <%=exam.createdBy%></p>
+    <button
+      type="button"
+      class="btn btn-outline-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#updateExamModal"
+    >
+      수정
+    </button>
+  </div>
+</div>
+
+<!-- 기본사항 수정 Modal -->
+<%- include('../partials/updateExamModal.ejs') %>
+
+<!-- 질문 추가 -->
+<h2 class="mb-3">현재 질문 목록</h2>
+<div class="mb-3">
+  <button
+    class="btn btn-outline-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#addQuestionModal"
+  >
+    직접 문제 추가
+  </button>
+  <button
+    class="btn btn-outline-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#aiQuestionModal"
+  >
+    AI로 문제 생성
+  </button>
+</div>
+
+<!-- 직접 질문 추가 Modal -->
+<%- include('../partials/addQuestionModal.ejs') %>
+<!-- GPT로 문제 생성 Modal-->
+<%- include('../partials/aiQuestionModal.ejs') %>
+
+<div class="row row-cols-1 row-cols-lg-2 g-4">
+  <% for (const [q_index, question] of exam.questions.entries()) { %>
+  <div class="col">
+    <%- include('../partials/summaryQuestionCard',{q_index, question})%>
+  </div>
+  <% } %>
+</div>
+
+<!-- 문제 수정 Modal -->
+<%- include('../partials/updateQuestionModal.ejs') %>
 
 <script src="/summary.js"></script>

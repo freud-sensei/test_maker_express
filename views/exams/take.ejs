@@ -1,23 +1,21 @@
 <% layout('layouts/boilerplate.ejs') %>
 <!-- 문제풀이 -->
-<div class="container">
-  <h1 class="mb-3"><%=exam.title%> 풀기</h1>
-  <div class="mb-3">
-    <a href="/exams" class="btn btn-warning me-2">돌아가기</a>
-  </div>
-
-  <% if (exam.questions.length === 0) { %>
-  <div class="alert alert-danger" role="alert">현재 문제가 없습니다.</div>
-  <% } else { %>
-  <form id="examForm" method="POST" action="/exams/<%=exam._id%>">
-    <div class="row row-cols-1 row-cols-lg-2 g-4">
-      <% for (const [q_index, question] of exam.questions.entries()) { %>
-      <div class="col">
-        <%- include('../partials/takeQuestionCard', {q_index, question}) %>
-      </div>
-      <% } %>
-    </div>
-    <button class="btn btn-primary my-3">제출하기</button>
-  </form>
-  <% } %>
+<h1 class="mb-3"><%=exam.title%> 풀기</h1>
+<div class="mb-3">
+  <a href="/exams" class="btn btn-warning me-2">돌아가기</a>
 </div>
+
+<% if (exam.questions.length === 0) { %>
+<div class="alert alert-danger" role="alert">현재 문제가 없습니다.</div>
+<% } else { %>
+<form id="examForm" method="POST" action="/exams/<%=exam._id%>">
+  <div class="row row-cols-1 row-cols-lg-2 g-4">
+    <% for (const [q_index, question] of exam.questions.entries()) { %>
+    <div class="col">
+      <%- include('../partials/takeQuestionCard', {q_index, question}) %>
+    </div>
+    <% } %>
+  </div>
+  <button class="btn btn-primary my-3">제출하기</button>
+</form>
+<% } %>

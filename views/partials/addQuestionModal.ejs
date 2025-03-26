@@ -18,7 +18,12 @@
           aria-label="Close"
         ></button>
       </div>
-      <form action="/make/<%=exam._id%>" method="post">
+      <form
+        action="/make/<%=exam._id%>"
+        method="post"
+        id="addQuestionForm"
+        novalidate
+      >
         <div class="modal-body">
           <div class="mb-3">
             <label for="question_add" class="form-label">문제</label>
@@ -29,6 +34,7 @@
               rows="3"
               required
             ></textarea>
+            <div class="invalid-feedback"></div>
           </div>
 
           <% for (let i = 0; i < 5; i++) { %>
@@ -44,6 +50,7 @@
               placeholder="<%=i + 1 %>번 보기"
               required
             />
+            <div class="invalid-feedback"></div>
           </div>
 
           <% } %>
@@ -57,6 +64,7 @@
               rows="5"
               required
             ></textarea>
+            <div class="invalid-feedback"></div>
           </div>
         </div>
 

@@ -8,7 +8,12 @@
   </head>
   <body>
     <!-- navbar -->
-    <%- include('../partials/navbar') %> <%-body %>
+    <%- include('../partials/navbar') %>
+    <div class="container">
+      <%- include('../partials/liveAlert') %> <%- body %>
+    </div>
+
     <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
 </html>

@@ -15,18 +15,47 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/exams">풀기</a>
+          <a class="nav-link" aria-current="page" href="/exams">풀기</a>
+        </li>
+        <% if (currentUser) {%>
+        <li class="nav-item">
+          <a class="nav-link" href="/make">만들기</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <%=currentUser.nickname%>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">회원정보 수정</a></li>
+            <li>
+              <button class="btn btn-link dropdown-item" form="logout-form">
+                로그아웃
+              </button>
+            </li>
+          </ul>
+        </li>
+        <% } else { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/users/login">로그인</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">만들기</a>
+          <a class="nav-link" href="/users/register">회원가입</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">나의 기록</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">로그인</a>
-        </li>
+        <% } %>
       </ul>
     </div>
   </div>
 </nav>
+
+<form
+  action="/users/logout"
+  display="none"
+  method="POST"
+  id="logout-form"
+></form>

@@ -19,7 +19,12 @@
         ></button>
       </div>
 
-      <form action="/make/<%=exam._id%>/aigen" method="post" id="aiForm">
+      <form
+        action="/make/<%=exam._id%>/aigen"
+        method="post"
+        id="aiForm"
+        novalidate
+      >
         <div class="modal-body">
           <div class="mb-3">
             <label for="ai_num_questions" class="form-label"
@@ -35,6 +40,7 @@
               value="5"
               required
             />
+            <div class="invalid-feedback"></div>
           </div>
 
           <div class="mb-3">
@@ -46,6 +52,7 @@
               rows="10"
               required
             ></textarea>
+            <div class="invalid-feedback"></div>
           </div>
 
           <div>

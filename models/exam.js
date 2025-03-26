@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
+const passport = require("passport-local-mongoose");
 
 // 유저 스키마
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true }, // ID
-  password: { type: String, required: true, minLength: 8 }, // 비밀번호
+  nickname: { type: String, required: true, unique: true },
   bio: { type: String }, // 자기소개
   exams: [{ type: mongoose.Schema.Types.ObjectID, ref: "Exam" }], // 시험지 배열,
 });
+userSchema.plugin(passport); // username, password 추가
 
 // 문제 스키마
 const questionSchema = new mongoose.Schema({
@@ -31,6 +32,7 @@ const reportSchema = new mongoose.Schema({
   exam: { type: mongoose.Schema.Types.ObjectID, ref: "Exam" },
   selected: { type: Map, of: String },
   points: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Exam = mongoose.model("Exam", examSchema);

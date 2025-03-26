@@ -1,0 +1,18 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<h1><%=report.exam.title%> 결과</h1>
+
+<div class="alert alert-light" role="alert">
+  <p>응시자: <%=report.user ? report.user.nickname : "게스트" %></p>
+  <%=report.exam.questions.length%>문제 중 <%=report.points%>문제 맞히셨습니다.
+</div>
+
+<a href="/exams" class="btn btn-warning mb-3">돌아가기</a>
+<div class="row row-cols-1 row-cols-lg-2 g-4">
+  <% for (const [q_index, question] of report.exam.questions.entries()) { %>
+  <div class="col">
+    <%- include('../partials/resultQuestionCard', {q_index, question, selected:
+    report.selected.get(String(question._id))}) %>
+  </div>
+  <% } %>
+</div>

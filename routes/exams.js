@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Exam, Report } = require("../models/exam");
+const { Exam, Report, User } = require("../models/exam");
 
 function formatDate(date) {
   return new Intl.DateTimeFormat("ko-KR", {
@@ -12,21 +12,28 @@ function formatDate(date) {
 
 // READ -> 모의고사 목록
 router.get("/", async (req, res, next) => {
-  const exams = await Exam.find().sort({ createdAt: -1 });
+  let exams;
+  if (req.session.exams) {
+    exams = req.session.exams;
+    delete req.session.exams;
+  } else {
+    exams = await Exam.find().sort({ createdAt: -1 });
+  }
   res.render("exams/index", { exams, formatDate });
 });
 
-// READ -> 모의고사 결과 보여주기
-router.get("/result/:id", async (req, res, next) => {
-  const report = await Report.findById(req.params.id).populate({
-    path: "exam",
-    populate: { path: "questions" },
-  });
-  console.log(report);
-  const { exam, selected, points } = report;
-  console.log(exam.questions.entries());
-
-  res.render("exams/result", { exam, selected, points });
+// READ -> search 기능
+router.post("/search", async (req, res, next) => {
+  const query = {};
+  if (req.body.title) {
+    query.title = { $regex: req.body.title, $options: "i" };
+  }
+  if (req.body.createdBy) {
+    query.createdBy = { $regex: req.body.createdBy, $options: "i" };
+  }
+  const exams = await Exam.find(query).sort({ createdAt: -1 });
+  req.session.exams = exams;
+  res.redirect("/exams");
 });
 
 // READ -> 각 모의고사 문제풀이
@@ -52,8 +59,17 @@ router.post("/:id", async (req, res, next) => {
     }
   }
 
-  const result = await Report.insertOne({ exam, selected, points });
-  res.redirect(`/exams/result/${result._id}`);
+  const report = { exam, selected, points };
+
+  if (res.locals.currentUser) {
+    const user = await User.findOne({
+      username: res.locals.currentUser.username,
+    });
+    report.user = user._id;
+  }
+
+  const result = await Report.insertOne(report);
+  res.redirect(`/reports/${result._id}`);
 });
 
 module.exports = router;

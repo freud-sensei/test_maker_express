@@ -16,7 +16,7 @@
           aria-label="Close"
         ></button>
       </div>
-      <form method="post" id="updateQuestionForm">
+      <form method="post" id="updateQuestionForm" novalidate>
         <div class="modal-body">
           <div class="mb-3">
             <label for="question_update" class="form-label">문제</label>
@@ -27,6 +27,7 @@
               rows="3"
               required
             ></textarea>
+            <div class="invalid-feedback"></div>
           </div>
 
           <% for (let i = 0; i < 5; i++) { %>
@@ -45,6 +46,7 @@
               id="options_<%=i%>_update"
               required
             />
+            <div class="invalid-feedback"></div>
           </div>
 
           <% } %>
@@ -58,6 +60,7 @@
               rows="5"
               required
             ></textarea>
+            <div class="invalid-feedback"></div>
           </div>
         </div>
 
